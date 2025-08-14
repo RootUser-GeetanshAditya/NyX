@@ -11,6 +11,10 @@ import re
 from datetime import datetime
 from pathlib import Path
 import json
+from pygments import highlight
+from pygments.lexers import get_lexer_by_name, guess_lexer
+from pygments.formatters import HtmlFormatter
+from pygments.util import ClassNotFound
 
 class PortfolioGenerator:
     def __init__(self):
@@ -24,14 +28,59 @@ class PortfolioGenerator:
         self.blog_dir.mkdir(exist_ok=True)
         self.writeups_dir.mkdir(exist_ok=True)
         
-        # Initialize markdown processor
-        self.md = markdown.Markdown(extensions=['meta', 'codehilite', 'toc'])
+        # Initialize markdown processor with enhanced extensions
+        self.md = markdown.Markdown(extensions=[
+            'meta', 
+            'codehilite', 
+            'toc', 
+            'fenced_code',
+            'tables',
+            'nl2br'
+        ], extension_configs={
+            'codehilite': {
+                'css_class': 'highlight',
+                'use_pygments': True,
+                'noclasses': False
+            }
+        })
+        
+        # Initialize Pygments formatter for syntax highlighting
+        self.code_formatter = HtmlFormatter(
+            style='monokai',
+            cssclass='highlight',
+            noclasses=False
+        )
     
+    def process_custom_boxes(self, content):
+        """Process custom info boxes in markdown content"""
+        box_patterns = {
+            'StartGreenBox': ('success-box', 'EndGreenBox'),
+            'StartRedBox': ('danger-box', 'EndRedBox'),
+            'StartBlueBox': ('info-box', 'EndBlueBox'),
+            'StartPurpleBox': ('note-box', 'EndPurpleBox'),
+            'StartYellowBox': ('warning-box', 'EndYellowBox')
+        }
+        
+        processed_content = content
+        
+        for start_tag, (css_class, end_tag) in box_patterns.items():
+            pattern = f"{start_tag}(.*?){end_tag}"
+            def replace_box(match):
+                box_content = match.group(1).strip()
+                return f'<div class="{css_class}">{box_content}</div>'
+            
+            processed_content = re.sub(pattern, replace_box, processed_content, flags=re.DOTALL)
+        
+        return processed_content
+
     def parse_markdown_file(self, file_path):
         """Parse markdown file and extract metadata"""
         try:
             with open(file_path, 'r', encoding='utf-8') as f:
                 content = f.read()
+            
+            # Process custom info boxes before markdown conversion
+            content = self.process_custom_boxes(content)
             
             # Reset markdown processor
             self.md.reset()
@@ -45,6 +94,15 @@ class PortfolioGenerator:
             created_date = datetime.fromtimestamp(stat.st_ctime)
             modified_date = datetime.fromtimestamp(stat.st_mtime)
             
+            # Determine if this is a folder-based post
+            folder_name = Path(file_path).parent.name
+            if folder_name in ['Blog', 'Writeups']:
+                # This is a root-level file, use filename
+                slug = Path(file_path).stem
+            else:
+                # This is a folder-based post, use folder name
+                slug = folder_name
+            
             return {
                 'title': metadata.get('title', [Path(file_path).stem.replace('-', ' ').title()])[0],
                 'description': metadata.get('description', [''])[0],
@@ -52,36 +110,57 @@ class PortfolioGenerator:
                 'category': metadata.get('category', ['General'])[0],
                 'date': metadata.get('date', [created_date.strftime('%Y-%m-%d')])[0],
                 'content': html_content,
-                'filename': Path(file_path).stem,
-                'file_path': str(file_path)
+                'filename': slug,
+                'file_path': str(file_path),
+                'folder_path': str(Path(file_path).parent)
             }
         except Exception as e:
             print(f"Error parsing {file_path}: {e}")
             return None
     
     def get_blog_posts(self):
-        """Get all blog posts from Blog directory"""
-        blog_files = glob.glob(str(self.blog_dir / "*.md"))
+        """Get all blog posts from Blog directory (including folder-based posts)"""
         blogs = []
         
+        # Get direct markdown files in Blog directory
+        blog_files = glob.glob(str(self.blog_dir / "*.md"))
         for file_path in blog_files:
             blog_data = self.parse_markdown_file(file_path)
             if blog_data:
                 blogs.append(blog_data)
+        
+        # Get folder-based blog posts (look for index.md in subdirectories)
+        blog_folders = [d for d in self.blog_dir.iterdir() if d.is_dir()]
+        for folder in blog_folders:
+            index_file = folder / "index.md"
+            if index_file.exists():
+                blog_data = self.parse_markdown_file(str(index_file))
+                if blog_data:
+                    blogs.append(blog_data)
         
         # Sort by date (newest first)
         blogs.sort(key=lambda x: x['date'], reverse=True)
         return blogs
     
     def get_writeups(self):
-        """Get all CTF writeups from Writeups directory"""
-        writeup_files = glob.glob(str(self.writeups_dir / "*.md"))
+        """Get all CTF writeups from Writeups directory (including folder-based writeups)"""
         writeups = []
         
+        # Get direct markdown files in Writeups directory
+        writeup_files = glob.glob(str(self.writeups_dir / "*.md"))
         for file_path in writeup_files:
             writeup_data = self.parse_markdown_file(file_path)
             if writeup_data:
                 writeups.append(writeup_data)
+        
+        # Get folder-based writeups (look for index.md in subdirectories)
+        writeup_folders = [d for d in self.writeups_dir.iterdir() if d.is_dir()]
+        for folder in writeup_folders:
+            index_file = folder / "index.md"
+            if index_file.exists():
+                writeup_data = self.parse_markdown_file(str(index_file))
+                if writeup_data:
+                    writeups.append(writeup_data)
         
         # Sort by date (newest first)
         writeups.sort(key=lambda x: x['date'], reverse=True)

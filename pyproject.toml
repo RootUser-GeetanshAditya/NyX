@@ -5,4 +5,5 @@ description = "Add your description here"
 requires-python = ">=3.11"
 dependencies = [
     "markdown>=3.8.2",
+    "pygments>=2.19.2",
 ]
