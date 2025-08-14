@@ -375,7 +375,7 @@ class PortfolioGenerator:
     
     def generate_sitemap(self, blogs, writeups):
         """Generate XML sitemap for Google Search Console"""
-        base_url = "https://nyx-cybersecurity.replit.app"  # Update with your actual domain
+        base_url = "https://geetanshaditya.com"  # Update with your actual domain
         sitemap_content = '<?xml version="1.0" encoding="UTF-8"?>\n'
         sitemap_content += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
         

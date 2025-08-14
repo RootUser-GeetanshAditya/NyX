@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://nyx-cybersecurity.replit.app/sitemap.xml
+Sitemap: https://geetanshaditya.com/sitemap.xml
