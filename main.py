@@ -11,10 +11,15 @@ import re
 from datetime import datetime
 from pathlib import Path
 import json
-from pygments import highlight
-from pygments.lexers import get_lexer_by_name, guess_lexer
-from pygments.formatters import HtmlFormatter
-from pygments.util import ClassNotFound
+try:
+    from pygments import highlight
+    from pygments.lexers import get_lexer_by_name, guess_lexer
+    from pygments.formatters import HtmlFormatter
+    from pygments.util import ClassNotFound
+    PYGMENTS_AVAILABLE = True
+except ImportError:
+    print("Warning: Pygments not available. Code highlighting disabled.")
+    PYGMENTS_AVAILABLE = False
 
 class PortfolioGenerator:
     def __init__(self):
@@ -29,27 +34,28 @@ class PortfolioGenerator:
         self.writeups_dir.mkdir(exist_ok=True)
         
         # Initialize markdown processor with enhanced extensions
-        self.md = markdown.Markdown(extensions=[
-            'meta', 
-            'codehilite', 
-            'toc', 
-            'fenced_code',
-            'tables',
-            'nl2br'
-        ], extension_configs={
-            'codehilite': {
+        extensions = ['meta', 'toc', 'fenced_code', 'tables', 'nl2br']
+        extension_configs = {}
+        
+        if PYGMENTS_AVAILABLE:
+            extensions.append('codehilite')
+            extension_configs['codehilite'] = {
                 'css_class': 'highlight',
                 'use_pygments': True,
                 'noclasses': False
             }
-        })
         
-        # Initialize Pygments formatter for syntax highlighting
-        self.code_formatter = HtmlFormatter(
-            style='monokai',
-            cssclass='highlight',
-            noclasses=False
-        )
+        self.md = markdown.Markdown(extensions=extensions, extension_configs=extension_configs)
+        
+        # Initialize Pygments formatter for syntax highlighting if available
+        self.code_formatter = None
+        if PYGMENTS_AVAILABLE:
+            from pygments.formatters import HtmlFormatter
+            self.code_formatter = HtmlFormatter(
+                style='monokai',
+                cssclass='highlight',
+                noclasses=False
+            )
     
     def process_custom_boxes(self, content):
         """Process custom info boxes in markdown content"""

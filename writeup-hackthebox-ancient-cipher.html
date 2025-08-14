@@ -84,126 +84,121 @@
 - <code>encrypted.txt</code>: Contains the encrypted message<br />
 - <code>hint.txt</code>: Provides context about the cipher type</p>
 <p>The encrypted text appears to be:</p>
-<div class="highlight"><pre><span></span><code>WKLV LV D VLPSOH VXEVWLWXWLRQ FLSKHU WKDW XVHV D FDVDU FLSKHU ZLWK D VKLIW RI WKUHH
-</code></pre></div>
-
+<pre><code>WKLV LV D VLPSOH VXEVWLWXWLRQ FLSKHU WKDW XVHV D FDVDU FLSKHU ZLWK D VKLIW RI WKUHH
+</code></pre>
 <div class="warning-box">**Observation:** The text maintains word boundaries and spacing, which suggests it's likely a simple substitution cipher rather than a complex polyalphabetic cipher.</div>
 
 <h2 id="frequency-analysis">Frequency Analysis</h2>
 <p>Let's start by performing frequency analysis on the encrypted text:</p>
-<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">frequency_analysis</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Perform frequency analysis on encrypted text&quot;&quot;&quot;</span>
-    <span class="n">text</span> <span class="o">=</span> <span class="n">text</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
-    <span class="n">freq_dict</span> <span class="o">=</span> <span class="p">{}</span>
+<pre><code class="language-python">def frequency_analysis(text):
+    &quot;&quot;&quot;Perform frequency analysis on encrypted text&quot;&quot;&quot;
+    text = text.upper().replace(' ', '')
+    freq_dict = {}
 
-    <span class="k">for</span> <span class="n">char</span> <span class="ow">in</span> <span class="n">text</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">char</span><span class="o">.</span><span class="n">isalpha</span><span class="p">():</span>
-            <span class="n">freq_dict</span><span class="p">[</span><span class="n">char</span><span class="p">]</span> <span class="o">=</span> <span class="n">freq_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">char</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+    for char in text:
+        if char.isalpha():
+            freq_dict[char] = freq_dict.get(char, 0) + 1
 
-    <span class="c1"># Sort by frequency</span>
-    <span class="n">sorted_freq</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">freq_dict</span><span class="o">.</span><span class="n">items</span><span class="p">(),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    # Sort by frequency
+    sorted_freq = sorted(freq_dict.items(), key=lambda x: x[1], reverse=True)
 
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Character Frequency Analysis:&quot;</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">char</span><span class="p">,</span> <span class="n">count</span> <span class="ow">in</span> <span class="n">sorted_freq</span><span class="p">:</span>
-        <span class="n">percentage</span> <span class="o">=</span> <span class="p">(</span><span class="n">count</span> <span class="o">/</span> <span class="nb">len</span><span class="p">([</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">text</span> <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">isalpha</span><span class="p">()]))</span> <span class="o">*</span> <span class="mi">100</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">char</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">count</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">percentage</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2">%)&quot;</span><span class="p">)</span>
+    print(&quot;Character Frequency Analysis:&quot;)
+    for char, count in sorted_freq:
+        percentage = (count / len([c for c in text if c.isalpha()])) * 100
+        print(f&quot;{char}: {count} ({percentage:.1f}%)&quot;)
 
-<span class="n">encrypted</span> <span class="o">=</span> <span class="s2">&quot;WKLV LV D VLPSOH VXEVWLWXWLRQ FLSKHU WKDW XVHV D FDVDU FLSKHU ZLWK D VKLIW RI WKUHH&quot;</span>
-<span class="n">frequency_analysis</span><span class="p">(</span><span class="n">encrypted</span><span class="p">)</span>
-</code></pre></div>
-
+encrypted = &quot;WKLV LV D VLPSOH VXEVWLWXWLRQ FLSKHU WKDW XVHV D FDVDU FLSKHU ZLWK D VKLIW RI WKUHH&quot;
+frequency_analysis(encrypted)
+</code></pre>
 <p>Output:</p>
-<div class="highlight"><pre><span></span><code>Character Frequency Analysis:
+<pre><code>Character Frequency Analysis:
 L: 6 (12.8%)
 V: 5 (10.6%)
 K: 4 (8.5%)
 H: 4 (8.5%)
-</code></pre></div>
-
+</code></pre>
 <h2 id="pattern-recognition">Pattern Recognition</h2>
 <p>Looking at the structure and frequency distribution, this appears to be a Caesar cipher. Let's try different shift values:</p>
 <div class="success-box">**Key Insight:** Caesar ciphers are monoalphabetic substitution ciphers where each letter is shifted by a fixed number of positions in the alphabet.</div>
 
-<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">caesar_decrypt</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">shift</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Decrypt Caesar cipher with given shift&quot;&quot;&quot;</span>
-    <span class="n">result</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+<pre><code class="language-python">def caesar_decrypt(text, shift):
+    &quot;&quot;&quot;Decrypt Caesar cipher with given shift&quot;&quot;&quot;
+    result = &quot;&quot;
 
-    <span class="k">for</span> <span class="n">char</span> <span class="ow">in</span> <span class="n">text</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">char</span><span class="o">.</span><span class="n">isalpha</span><span class="p">():</span>
-            <span class="c1"># Handle uppercase letters</span>
-            <span class="k">if</span> <span class="n">char</span><span class="o">.</span><span class="n">isupper</span><span class="p">():</span>
-                <span class="n">result</span> <span class="o">+=</span> <span class="nb">chr</span><span class="p">((</span><span class="nb">ord</span><span class="p">(</span><span class="n">char</span><span class="p">)</span> <span class="o">-</span> <span class="nb">ord</span><span class="p">(</span><span class="s1">&#39;A&#39;</span><span class="p">)</span> <span class="o">-</span> <span class="n">shift</span><span class="p">)</span> <span class="o">%</span> <span class="mi">26</span> <span class="o">+</span> <span class="nb">ord</span><span class="p">(</span><span class="s1">&#39;A&#39;</span><span class="p">))</span>
-            <span class="c1"># Handle lowercase letters</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">result</span> <span class="o">+=</span> <span class="nb">chr</span><span class="p">((</span><span class="nb">ord</span><span class="p">(</span><span class="n">char</span><span class="p">)</span> <span class="o">-</span> <span class="nb">ord</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">)</span> <span class="o">-</span> <span class="n">shift</span><span class="p">)</span> <span class="o">%</span> <span class="mi">26</span> <span class="o">+</span> <span class="nb">ord</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">))</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">result</span> <span class="o">+=</span> <span class="n">char</span>
+    for char in text:
+        if char.isalpha():
+            # Handle uppercase letters
+            if char.isupper():
+                result += chr((ord(char) - ord('A') - shift) % 26 + ord('A'))
+            # Handle lowercase letters
+            else:
+                result += chr((ord(char) - ord('a') - shift) % 26 + ord('a'))
+        else:
+            result += char
 
-    <span class="k">return</span> <span class="n">result</span>
+    return result
 
-<span class="c1"># Test different shift values</span>
-<span class="n">encrypted</span> <span class="o">=</span> <span class="s2">&quot;WKLV LV D VLPSOH VXEVWLWXWLRQ FLSKHU WKDW XVHV D FDVDU FLSKHU ZLWK D VKLIW RI WKUHH&quot;</span>
+# Test different shift values
+encrypted = &quot;WKLV LV D VLPSOH VXEVWLWXWLRQ FLSKHU WKDW XVHV D FDVDU FLSKHU ZLWK D VKLIW RI WKUHH&quot;
 
-<span class="k">for</span> <span class="n">shift</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">26</span><span class="p">):</span>
-    <span class="n">decrypted</span> <span class="o">=</span> <span class="n">caesar_decrypt</span><span class="p">(</span><span class="n">encrypted</span><span class="p">,</span> <span class="n">shift</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Shift </span><span class="si">{</span><span class="n">shift</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">decrypted</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-</code></pre></div>
-
+for shift in range(26):
+    decrypted = caesar_decrypt(encrypted, shift)
+    print(f&quot;Shift {shift}: {decrypted}&quot;)
+</code></pre>
 <h2 id="solution-discovery">Solution Discovery</h2>
 <p>After testing various shifts, we find that a shift of <strong>3</strong> produces readable English text:</p>
 <div class="success-box">**Solution Found:** With a shift of 3, the decrypted message reads: "THIS IS A SIMPLE SUBSTITUTION CIPHER THAT USES A CAESAR CIPHER WITH A SHIFT OF THREE"</div>
 
 <h2 id="automated-solution-script">Automated Solution Script</h2>
 <p>Here's the complete solution script:</p>
-<div class="highlight"><pre><span></span><code><span class="ch">#!/usr/bin/env python3</span>
+<pre><code class="language-python">#!/usr/bin/env python3
 
-<span class="k">def</span><span class="w"> </span><span class="nf">caesar_decrypt</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">shift</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Decrypt Caesar cipher with given shift&quot;&quot;&quot;</span>
-    <span class="n">result</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+def caesar_decrypt(text, shift):
+    &quot;&quot;&quot;Decrypt Caesar cipher with given shift&quot;&quot;&quot;
+    result = &quot;&quot;
 
-    <span class="k">for</span> <span class="n">char</span> <span class="ow">in</span> <span class="n">text</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">char</span><span class="o">.</span><span class="n">isalpha</span><span class="p">():</span>
-            <span class="k">if</span> <span class="n">char</span><span class="o">.</span><span class="n">isupper</span><span class="p">():</span>
-                <span class="n">result</span> <span class="o">+=</span> <span class="nb">chr</span><span class="p">((</span><span class="nb">ord</span><span class="p">(</span><span class="n">char</span><span class="p">)</span> <span class="o">-</span> <span class="nb">ord</span><span class="p">(</span><span class="s1">&#39;A&#39;</span><span class="p">)</span> <span class="o">-</span> <span class="n">shift</span><span class="p">)</span> <span class="o">%</span> <span class="mi">26</span> <span class="o">+</span> <span class="nb">ord</span><span class="p">(</span><span class="s1">&#39;A&#39;</span><span class="p">))</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">result</span> <span class="o">+=</span> <span class="nb">chr</span><span class="p">((</span><span class="nb">ord</span><span class="p">(</span><span class="n">char</span><span class="p">)</span> <span class="o">-</span> <span class="nb">ord</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">)</span> <span class="o">-</span> <span class="n">shift</span><span class="p">)</span> <span class="o">%</span> <span class="mi">26</span> <span class="o">+</span> <span class="nb">ord</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">))</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">result</span> <span class="o">+=</span> <span class="n">char</span>
+    for char in text:
+        if char.isalpha():
+            if char.isupper():
+                result += chr((ord(char) - ord('A') - shift) % 26 + ord('A'))
+            else:
+                result += chr((ord(char) - ord('a') - shift) % 26 + ord('a'))
+        else:
+            result += char
 
-    <span class="k">return</span> <span class="n">result</span>
+    return result
 
-<span class="k">def</span><span class="w"> </span><span class="nf">find_caesar_key</span><span class="p">(</span><span class="n">encrypted_text</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Find the most likely Caesar cipher key by testing all possibilities&quot;&quot;&quot;</span>
-    <span class="n">common_words</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;THE&#39;</span><span class="p">,</span> <span class="s1">&#39;AND&#39;</span><span class="p">,</span> <span class="s1">&#39;IS&#39;</span><span class="p">,</span> <span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;TO&#39;</span><span class="p">,</span> <span class="s1">&#39;OF&#39;</span><span class="p">,</span> <span class="s1">&#39;IN&#39;</span><span class="p">,</span> <span class="s1">&#39;IT&#39;</span><span class="p">,</span> <span class="s1">&#39;YOU&#39;</span><span class="p">,</span> <span class="s1">&#39;THAT&#39;</span><span class="p">]</span>
+def find_caesar_key(encrypted_text):
+    &quot;&quot;&quot;Find the most likely Caesar cipher key by testing all possibilities&quot;&quot;&quot;
+    common_words = ['THE', 'AND', 'IS', 'A', 'TO', 'OF', 'IN', 'IT', 'YOU', 'THAT']
 
-    <span class="n">best_score</span> <span class="o">=</span> <span class="mi">0</span>
-    <span class="n">best_shift</span> <span class="o">=</span> <span class="mi">0</span>
+    best_score = 0
+    best_shift = 0
 
-    <span class="k">for</span> <span class="n">shift</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">26</span><span class="p">):</span>
-        <span class="n">decrypted</span> <span class="o">=</span> <span class="n">caesar_decrypt</span><span class="p">(</span><span class="n">encrypted_text</span><span class="p">,</span> <span class="n">shift</span><span class="p">)</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
-        <span class="n">score</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="mi">1</span> <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">common_words</span> <span class="k">if</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">decrypted</span><span class="p">)</span>
+    for shift in range(26):
+        decrypted = caesar_decrypt(encrypted_text, shift).upper()
+        score = sum(1 for word in common_words if word in decrypted)
 
-        <span class="k">if</span> <span class="n">score</span> <span class="o">&gt;</span> <span class="n">best_score</span><span class="p">:</span>
-            <span class="n">best_score</span> <span class="o">=</span> <span class="n">score</span>
-            <span class="n">best_shift</span> <span class="o">=</span> <span class="n">shift</span>
+        if score &gt; best_score:
+            best_score = score
+            best_shift = shift
 
-    <span class="k">return</span> <span class="n">best_shift</span>
+    return best_shift
 
-<span class="c1"># Main execution</span>
-<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
-    <span class="n">encrypted</span> <span class="o">=</span> <span class="s2">&quot;WKLV LV D VLPSOH VXEVWLWXWLRQ FLSKHU WKDW XVHV D FDVDU FLSKHU ZLWK D VKLIW RI WKUHH&quot;</span>
+# Main execution
+if __name__ == &quot;__main__&quot;:
+    encrypted = &quot;WKLV LV D VLPSOH VXEVWLWXWLRQ FLSKHU WKDW XVHV D FDVDU FLSKHU ZLWK D VKLIW RI WKUHH&quot;
 
-    <span class="c1"># Find the key automatically</span>
-    <span class="n">key</span> <span class="o">=</span> <span class="n">find_caesar_key</span><span class="p">(</span><span class="n">encrypted</span><span class="p">)</span>
+    # Find the key automatically
+    key = find_caesar_key(encrypted)
 
-    <span class="c1"># Decrypt with the found key</span>
-    <span class="n">decrypted</span> <span class="o">=</span> <span class="n">caesar_decrypt</span><span class="p">(</span><span class="n">encrypted</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
+    # Decrypt with the found key
+    decrypted = caesar_decrypt(encrypted, key)
 
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Detected shift: </span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Decrypted message: </span><span class="si">{</span><span class="n">decrypted</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Flag format: HTB</span><span class="se">{{</span><span class="si">{</span><span class="n">decrypted</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;_&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="si">}</span><span class="se">}}</span><span class="s2">&quot;</span><span class="p">)</span>
-</code></pre></div>
-
+    print(f&quot;Detected shift: {key}&quot;)
+    print(f&quot;Decrypted message: {decrypted}&quot;)
+    print(f&quot;Flag format: HTB{{{decrypted.replace(' ', '_').lower()}}}&quot;)
+</code></pre>
 <h2 id="key-lessons-learned">Key Lessons Learned</h2>
 <div class="note-box">**Learning Outcomes:**
 1. **Frequency Analysis:** Always start with frequency analysis for substitution ciphers
@@ -213,9 +208,8 @@ H: 4 (8.5%)
 
 <h2 id="flag-submission">Flag Submission</h2>
 <p>The final flag for submission would be:</p>
-<div class="highlight"><pre><span></span><code><span class="nx">HTB</span><span class="p">{</span><span class="nx">this_is_a_simple_substitution_cipher_that_uses_a_caesar_cipher_with_a_shift_of_three</span><span class="p">}</span>
-</code></pre></div>
-
+<pre><code>HTB{this_is_a_simple_substitution_cipher_that_uses_a_caesar_cipher_with_a_shift_of_three}
+</code></pre>
 <div class="danger-box">**Security Note:** While Caesar ciphers were used historically, they are extremely weak by modern standards and should never be used for real-world cryptographic applications.</div>
                     </div>
                 </article>
