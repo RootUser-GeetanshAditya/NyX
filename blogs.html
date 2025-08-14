@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NYX Cybersecurity - Blogs</title>
+    <meta name="description" content="NYX - Professional Cybersecurity Specialist | Reverse Engineering, DFIR, Penetration Testing, Exploit Development">
+    <meta name="keywords" content="cybersecurity, reverse engineering, DFIR, penetration testing, exploit development, malware analysis">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Main stylesheet -->
+    <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+    <header class="main-header">
+        <nav class="navbar">
+            <div class="nav-container">
+                <a href="index.html" class="nav-brand">
+                    <span class="brand-name">NYX</span>
+                </a>
+                
+                <ul class="nav-menu">
+                    <li class="nav-item">
+                        <a href="index.html" class="nav-link">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="blogs.html" class="nav-link">Blogs</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="writeups.html" class="nav-link">CTF Writeups</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="services.html" class="nav-link">Services</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="about.html" class="nav-link">About Me</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="contact.html" class="nav-link">Contact</a>
+                    </li>
+                </ul>
+                
+                <div class="nav-toggle" id="mobile-menu">
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="blogs-page">
+    <section class="page-header">
+        <div class="section-container">
+            <h1>Technical Blogs</h1>
+            <p class="page-description">
+                In-depth analysis of cybersecurity topics, reverse engineering techniques, 
+                and insights from the field of digital forensics and incident response.
+            </p>
+        </div>
+    </section>
+
+    <section class="blogs-content">
+        <div class="section-container">
+            <div class="content-grid">
+                {{all_blogs}}
+            </div>
+        </div>
+    </section>
+</main>
+
+
+    <footer class="main-footer">
+        <div class="footer-container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>NYX</h3>
+                    <p>Professional Cybersecurity Specialist</p>
+                    <div class="social-links">
+                        <a href="#" aria-label="GitHub"><i class="fab fa-github"></i></a>
+                        <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+                        <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                        <a href="mailto:contact@nyx-cyber.com" aria-label="Email"><i class="fas fa-envelope"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Services</h4>
+                    <ul>
+                        <li><a href="services.html">Penetration Testing</a></li>
+                        <li><a href="services.html">Incident Response</a></li>
+                        <li><a href="services.html">Malware Analysis</a></li>
+                        <li><a href="services.html">Reverse Engineering</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Resources</h4>
+                    <ul>
+                        <li><a href="blogs.html">Blog Posts</a></li>
+                        <li><a href="writeups.html">CTF Writeups</a></li>
+                        <li><a href="about.html">About</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2024 NYX Cybersecurity. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

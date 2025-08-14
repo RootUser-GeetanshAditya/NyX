@@ -1,0 +1,91 @@
+<svg width="400" height="400" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="gradient1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#00C48C;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#7DD3FC;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="gradient2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#7DD3FC;stop-opacity:0.8" />
+      <stop offset="100%" style="stop-color:#00C48C;stop-opacity:0.8" />
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+      <feMerge> 
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  
+  <!-- Background circle -->
+  <circle cx="200" cy="200" r="180" fill="none" stroke="url(#gradient1)" stroke-width="2" opacity="0.3"/>
+  
+  <!-- Central hexagon -->
+  <polygon points="200,120 240,140 240,180 200,200 160,180 160,140" fill="url(#gradient1)" opacity="0.8" filter="url(#glow)"/>
+  
+  <!-- Orbiting elements -->
+  <g>
+    <!-- Shield icon representation -->
+    <path d="M100,100 L120,80 L140,100 L130,130 L110,130 Z" fill="url(#gradient2)" opacity="0.9">
+      <animateTransform attributeName="transform" attributeType="XML" type="rotate" from="0 200 200" to="360 200 200" dur="20s" repeatCount="indefinite"/>
+    </path>
+    
+    <!-- Lock icon representation -->
+    <rect x="290" y="90" width="20" height="20" fill="url(#gradient1)" opacity="0.8">
+      <animateTransform attributeName="transform" attributeType="XML" type="rotate" from="0 200 200" to="-360 200 200" dur="25s" repeatCount="indefinite"/>
+    </rect>
+    
+    <!-- Bug/malware representation -->
+    <ellipse cx="80" cy="300" rx="15" ry="10" fill="#FF6B6B" opacity="0.7">
+      <animateTransform attributeName="transform" attributeType="XML" type="rotate" from="0 200 200" to="360 200 200" dur="30s" repeatCount="indefinite"/>
+    </ellipse>
+    
+    <!-- Network node -->
+    <circle cx="320" cy="300" r="12" fill="url(#gradient2)" opacity="0.8">
+      <animateTransform attributeName="transform" attributeType="XML" type="rotate" from="0 200 200" to="-360 200 200" dur="35s" repeatCount="indefinite"/>
+    </circle>
+  </g>
+  
+  <!-- Connection lines -->
+  <g stroke="url(#gradient1)" stroke-width="1" opacity="0.5" fill="none">
+    <line x1="200" y1="160" x2="120" y2="120">
+      <animate attributeName="opacity" values="0.5;1;0.5" dur="3s" repeatCount="indefinite"/>
+    </line>
+    <line x1="200" y1="160" x2="300" y2="110">
+      <animate attributeName="opacity" values="0.5;1;0.5" dur="4s" repeatCount="indefinite"/>
+    </line>
+    <line x1="200" y1="160" x2="90" y2="300">
+      <animate attributeName="opacity" values="0.5;1;0.5" dur="5s" repeatCount="indefinite"/>
+    </line>
+    <line x1="200" y1="160" x2="320" y2="300">
+      <animate attributeName="opacity" values="0.5;1;0.5" dur="3.5s" repeatCount="indefinite"/>
+    </line>
+  </g>
+  
+  <!-- Binary code elements -->
+  <g fill="url(#gradient1)" opacity="0.4" font-family="monospace" font-size="12">
+    <text x="50" y="50">01001000</text>
+    <text x="300" y="50">11100101</text>
+    <text x="50" y="350">10110010</text>
+    <text x="280" y="350">01101110</text>
+  </g>
+  
+  <!-- Geometric patterns -->
+  <g fill="none" stroke="url(#gradient2)" stroke-width="1" opacity="0.6">
+    <!-- Triangle -->
+    <polygon points="350,150 370,180 330,180">
+      <animateTransform attributeName="transform" attributeType="XML" type="rotate" from="0 350 165" to="360 350 165" dur="15s" repeatCount="indefinite"/>
+    </polygon>
+    
+    <!-- Diamond -->
+    <polygon points="50,200 70,180 90,200 70,220">
+      <animateTransform attributeName="transform" attributeType="XML" type="rotate" from="0 70 200" to="-360 70 200" dur="18s" repeatCount="indefinite"/>
+    </polygon>
+  </g>
+  
+  <!-- Pulse effect -->
+  <circle cx="200" cy="200" r="5" fill="url(#gradient1)" opacity="1">
+    <animate attributeName="r" values="5;25;5" dur="2s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values="1;0;1" dur="2s" repeatCount="indefinite"/>
+  </circle>
+</svg>
