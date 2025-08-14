@@ -164,7 +164,7 @@ if __name__ == "__main__":
     
     print(f"Detected shift: {key}")
     print(f"Decrypted message: {decrypted}")
-    print(f"Flag format: HTB{{{decrypted.replace(' ', '_').lower()}}}")
+    print(f"Flag format: HTB{{decrypted.replace(' ', '_').lower()}}")
 ```
 
 ## Key Lessons Learned
