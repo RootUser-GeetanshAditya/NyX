@@ -8,6 +8,17 @@ This is a professional cybersecurity portfolio website for NYX, a cybersecurity 
 
 Preferred communication style: Simple, everyday language.
 
+## Recent Changes (Migration Completed - Aug 14, 2025)
+
+✓ **Dependency Management Fixed**: Resolved missing pygments dependency issue by implementing graceful fallback for code highlighting
+✓ **Template System Improved**: Fixed placeholder replacement issue in index.html - now properly shows actual blog and writeup content instead of {{latest_blogs}} and {{latest_writeups}} placeholders
+✓ **File Structure Enhanced**: Modified main.py to generate HTML files in their original folder structure:
+  - Blog posts: Generated in `Blog/[folder-name]/[filename].html` format
+  - Writeup posts: Generated in `Writeups/[folder-name]/[filename].html` format
+✓ **Navigation System Updated**: Fixed navigation links in nested folders to properly reference parent directory paths (../../)
+✓ **Web Server Setup**: Configured Python HTTP server on port 5000 for development preview
+✓ **Migration Complete**: Project successfully migrated from Replit Agent to standard Replit environment
+
 ## System Architecture
 
 ### Frontend Architecture

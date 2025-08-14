@@ -201,15 +201,24 @@ class PortfolioGenerator:
             
             tags_html = " ".join([f'<span class="tag">{tag}</span>' for tag in blog['tags']])
             
+            # Determine the correct link path
+            blog_folder_path = Path(blog['folder_path'])
+            if blog_folder_path.name in ['Blog', 'Writeups']:
+                # Root level blog
+                link_path = f"{blog['filename']}.html"
+            else:
+                # Folder-based blog
+                link_path = f"{blog_folder_path.name}/{blog['filename']}.html"
+            
             cards_html += f'''
             <article class="content-card">
-                <h3><a href="blog-{blog['filename']}.html">{blog['title']}</a></h3>
+                <h3><a href="{link_path}">{blog['title']}</a></h3>
                 <p class="excerpt">{excerpt}</p>
                 <div class="meta">
                     <span class="date">{blog['date']}</span>
                     <div class="tags">{tags_html}</div>
                 </div>
-                <a href="blog-{blog['filename']}.html" class="read-more-btn">Read More</a>
+                <a href="{link_path}" class="read-more-btn">Read More</a>
             </article>
             '''
         
@@ -225,16 +234,25 @@ class PortfolioGenerator:
             excerpt = re.sub('<[^<]+?>', '', writeup['content'])[:150] + "..."
             tags_html = " ".join([f'<span class="tag">{tag}</span>' for tag in writeup['tags']])
             
+            # Determine the correct link path
+            writeup_folder_path = Path(writeup['folder_path'])
+            if writeup_folder_path.name in ['Blog', 'Writeups']:
+                # Root level writeup
+                link_path = f"{writeup['filename']}.html"
+            else:
+                # Folder-based writeup
+                link_path = f"{writeup_folder_path.name}/{writeup['filename']}.html"
+            
             cards_html += f'''
             <article class="content-card">
-                <h3><a href="writeup-{writeup['filename']}.html">{writeup['title']}</a></h3>
+                <h3><a href="{link_path}">{writeup['title']}</a></h3>
                 <p class="excerpt">{excerpt}</p>
                 <div class="meta">
                     <span class="date">{writeup['date']}</span>
                     <span class="category">{writeup['category']}</span>
                     <div class="tags">{tags_html}</div>
                 </div>
-                <a href="writeup-{writeup['filename']}.html" class="read-more-btn">Read Writeup</a>
+                <a href="{link_path}" class="read-more-btn">Read Writeup</a>
             </article>
             '''
         
@@ -263,7 +281,7 @@ class PortfolioGenerator:
                     </div>
                 </article>
                 <nav class="post-navigation">
-                    <a href="blogs.html" class="back-link">← Back to Blogs</a>
+                    <a href="../blogs.html" class="back-link">← Back to Blogs</a>
                 </nav>
             </main>
             '''
@@ -275,9 +293,29 @@ class PortfolioGenerator:
             
             final_html = self.replace_template_variables(base_template, variables)
             
-            output_path = self.output_dir / f"blog-{blog['filename']}.html"
+            # Determine output path based on blog location
+            blog_folder_path = Path(blog['folder_path'])
+            if blog_folder_path.name in ['Blog', 'Writeups']:
+                # Root level blog - save in root directory
+                output_path = self.output_dir / f"{blog['filename']}.html"
+            else:
+                # Folder-based blog - save in the same folder
+                blog_folder_path.mkdir(exist_ok=True)
+                output_path = blog_folder_path / f"{blog['filename']}.html"
+                # Update navigation for folder-based blogs
+                final_html = final_html.replace('href="../blogs.html"', 'href="../../blogs.html"')
+                final_html = final_html.replace('href="assets/', 'href="../../assets/')
+                final_html = final_html.replace('href="index.html"', 'href="../../index.html"')
+                final_html = final_html.replace('href="blogs.html"', 'href="../../blogs.html"')
+                final_html = final_html.replace('href="writeups.html"', 'href="../../writeups.html"')
+                final_html = final_html.replace('href="services.html"', 'href="../../services.html"')
+                final_html = final_html.replace('href="about.html"', 'href="../../about.html"')
+                final_html = final_html.replace('href="contact.html"', 'href="../../contact.html"')
+            
             with open(output_path, 'w', encoding='utf-8') as f:
                 f.write(final_html)
+            
+            print(f"Generated blog: {output_path}")
         
         # Generate individual writeup pages
         for writeup in writeups:
@@ -299,7 +337,7 @@ class PortfolioGenerator:
                     </div>
                 </article>
                 <nav class="post-navigation">
-                    <a href="writeups.html" class="back-link">← Back to Writeups</a>
+                    <a href="../writeups.html" class="back-link">← Back to Writeups</a>
                 </nav>
             </main>
             '''
@@ -311,9 +349,29 @@ class PortfolioGenerator:
             
             final_html = self.replace_template_variables(base_template, variables)
             
-            output_path = self.output_dir / f"writeup-{writeup['filename']}.html"
+            # Determine output path based on writeup location
+            writeup_folder_path = Path(writeup['folder_path'])
+            if writeup_folder_path.name in ['Blog', 'Writeups']:
+                # Root level writeup - save in root directory
+                output_path = self.output_dir / f"{writeup['filename']}.html"
+            else:
+                # Folder-based writeup - save in the same folder
+                writeup_folder_path.mkdir(exist_ok=True)
+                output_path = writeup_folder_path / f"{writeup['filename']}.html"
+                # Update navigation for folder-based writeups
+                final_html = final_html.replace('href="../writeups.html"', 'href="../../writeups.html"')
+                final_html = final_html.replace('href="assets/', 'href="../../assets/')
+                final_html = final_html.replace('href="index.html"', 'href="../../index.html"')
+                final_html = final_html.replace('href="blogs.html"', 'href="../../blogs.html"')
+                final_html = final_html.replace('href="writeups.html"', 'href="../../writeups.html"')
+                final_html = final_html.replace('href="services.html"', 'href="../../services.html"')
+                final_html = final_html.replace('href="about.html"', 'href="../../about.html"')
+                final_html = final_html.replace('href="contact.html"', 'href="../../contact.html"')
+            
             with open(output_path, 'w', encoding='utf-8') as f:
                 f.write(final_html)
+            
+            print(f"Generated writeup: {output_path}")
     
     def generate_all_pages(self):
         """Generate all website pages"""
@@ -349,15 +407,16 @@ class PortfolioGenerator:
             template_content = self.load_template(template_file)
             
             if template_content:
-                # Replace template variables
+                # Replace template variables in the template content first
+                template_content = self.replace_template_variables(template_content, extra_vars)
+                
+                # Replace template variables in base template
                 variables = {
                     'page_title': f"NYX Cybersecurity - {output_file.split('.')[0].title()}",
-                    **extra_vars
+                    'main_content': template_content
                 }
                 
                 final_html = self.replace_template_variables(base_template, variables)
-                final_html = self.replace_template_variables(final_html, variables)
-                final_html = final_html.replace('{{main_content}}', template_content)
                 
                 # Write output file
                 output_path = self.output_dir / output_file
