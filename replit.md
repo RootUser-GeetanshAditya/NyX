@@ -17,6 +17,9 @@ Preferred communication style: Simple, everyday language.
   - Writeup posts: Generated in `Writeups/[folder-name]/[filename].html` format
 ✓ **Navigation System Updated**: Fixed navigation links in nested folders to properly reference parent directory paths (../../)
 ✓ **Web Server Setup**: Configured Python HTTP server on port 5000 for development preview
+✓ **SEO Enhancement**: Added XML sitemap generation for Google Search Console and robots.txt for better search engine indexing
+✓ **GitHub Actions**: Implemented automated deployment workflow that regenerates the site on any repository changes
+✓ **Cleanup**: Removed outdated blog/writeup HTML files in root directory - content now properly organized in folder structure
 ✓ **Migration Complete**: Project successfully migrated from Replit Agent to standard Replit environment
 
 ## System Architecture
@@ -84,5 +87,11 @@ The website supports two main content types: technical blogs and CTF writeups. E
 ### Development Dependencies
 - **Python 3**: Runtime environment for the static site generator
 - **File System**: Local storage for Markdown content and generated HTML files
+
+### SEO and Deployment
+- **XML Sitemap**: Automatically generated sitemap.xml for Google Search Console submission
+- **Robots.txt**: Search engine crawling instructions with sitemap reference
+- **GitHub Actions**: Automated deployment pipeline that regenerates the site on repository changes
+- **GitHub Pages**: Static hosting platform integration for automatic deployment
 
 The architecture is designed to be simple and maintainable, with minimal external dependencies and a clear separation between content creation (Markdown) and presentation (HTML/CSS). The static site generation approach ensures fast loading times and easy deployment to any web hosting platform.

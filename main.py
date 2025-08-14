@@ -208,7 +208,7 @@ class PortfolioGenerator:
                 link_path = f"{blog['filename']}.html"
             else:
                 # Folder-based blog
-                link_path = f"{blog_folder_path.name}/{blog['filename']}.html"
+                link_path = f"Blog/{blog_folder_path.name}/{blog['filename']}.html"
             
             cards_html += f'''
             <article class="content-card">
@@ -241,7 +241,7 @@ class PortfolioGenerator:
                 link_path = f"{writeup['filename']}.html"
             else:
                 # Folder-based writeup
-                link_path = f"{writeup_folder_path.name}/{writeup['filename']}.html"
+                link_path = f"Writeups/{writeup_folder_path.name}/{writeup['filename']}.html"
             
             cards_html += f'''
             <article class="content-card">
@@ -373,6 +373,84 @@ class PortfolioGenerator:
             
             print(f"Generated writeup: {output_path}")
     
+    def generate_sitemap(self, blogs, writeups):
+        """Generate XML sitemap for Google Search Console"""
+        base_url = "https://nyx-cybersecurity.replit.app"  # Update with your actual domain
+        sitemap_content = '<?xml version="1.0" encoding="UTF-8"?>\n'
+        sitemap_content += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+        
+        # Add main pages
+        main_pages = [
+            ('', '1.0', 'daily'),  # Homepage
+            ('blogs.html', '0.9', 'weekly'),
+            ('writeups.html', '0.9', 'weekly'),
+            ('services.html', '0.8', 'monthly'),
+            ('about.html', '0.7', 'monthly'),
+            ('contact.html', '0.7', 'monthly')
+        ]
+        
+        for page, priority, changefreq in main_pages:
+            sitemap_content += f'''  <url>
+    <loc>{base_url}/{page}</loc>
+    <changefreq>{changefreq}</changefreq>
+    <priority>{priority}</priority>
+  </url>
+'''
+        
+        # Add blog posts
+        for blog in blogs:
+            blog_folder_path = Path(blog['folder_path'])
+            if blog_folder_path.name in ['Blog', 'Writeups']:
+                url_path = f"{blog['filename']}.html"
+            else:
+                url_path = f"Blog/{blog_folder_path.name}/{blog['filename']}.html"
+            
+            sitemap_content += f'''  <url>
+    <loc>{base_url}/{url_path}</loc>
+    <lastmod>{blog['date']}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+'''
+        
+        # Add writeups
+        for writeup in writeups:
+            writeup_folder_path = Path(writeup['folder_path'])
+            if writeup_folder_path.name in ['Blog', 'Writeups']:
+                url_path = f"{writeup['filename']}.html"
+            else:
+                url_path = f"Writeups/{writeup_folder_path.name}/{writeup['filename']}.html"
+            
+            sitemap_content += f'''  <url>
+    <loc>{base_url}/{url_path}</loc>
+    <lastmod>{writeup['date']}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+'''
+        
+        sitemap_content += '</urlset>'
+        
+        # Write sitemap.xml
+        sitemap_path = self.output_dir / "sitemap.xml"
+        with open(sitemap_path, 'w', encoding='utf-8') as f:
+            f.write(sitemap_content)
+        
+        print("Generated: sitemap.xml")
+        
+        # Also generate robots.txt
+        robots_content = f"""User-agent: *
+Allow: /
+
+Sitemap: {base_url}/sitemap.xml
+"""
+        
+        robots_path = self.output_dir / "robots.txt"
+        with open(robots_path, 'w', encoding='utf-8') as f:
+            f.write(robots_content)
+        
+        print("Generated: robots.txt")
+    
     def generate_all_pages(self):
         """Generate all website pages"""
         print("Generating NYX Cybersecurity Portfolio...")
@@ -427,6 +505,9 @@ class PortfolioGenerator:
         
         # Generate individual blog and writeup pages
         self.generate_individual_pages(blogs, writeups)
+        
+        # Generate sitemap for SEO
+        self.generate_sitemap(blogs, writeups)
         
         print("Portfolio generation complete!")
 
