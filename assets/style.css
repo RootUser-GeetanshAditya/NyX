@@ -131,6 +131,18 @@ a:hover {
     transform: translateY(-2px);
 }
 
+.btn-tertiary {
+    background-color: transparent;
+    color: #ffffff; /* Dark purple color */
+    border: 2px solid #b673e6; /* Dark purple color */
+}
+
+.btn-tertiary:hover {
+    background-color: #bd93db; /* Dark purple color */
+    color: var(--bg-primary);
+    transform: translateY(-2px);
+}
+
 .btn-full {
     width: 100%;
     justify-content: center;
