@@ -287,7 +287,7 @@ class PortfolioGenerator:
             '''
             
             variables = {
-                'page_title': f"{blog['title']} - NYX Cybersecurity",
+                'page_title': f"{blog['title']} - Geetansh Cybersecurity",
                 'main_content': page_content
             }
             
@@ -343,7 +343,7 @@ class PortfolioGenerator:
             '''
             
             variables = {
-                'page_title': f"{writeup['title']} - NYX Cybersecurity",
+                'page_title': f"{writeup['title']} - Geetansh Cybersecurity",
                 'main_content': page_content
             }
             
@@ -490,7 +490,7 @@ Sitemap: {base_url}/sitemap.xml
                 
                 # Replace template variables in base template
                 variables = {
-                    'page_title': f"NYX Cybersecurity - {output_file.split('.')[0].title()}",
+                    'page_title': f"Geetansh Cybersecurity - {output_file.split('.')[0].title()}",
                     'main_content': template_content
                 }
                 
