@@ -462,10 +462,24 @@ a:hover {
 }
 
 .content-page {
-    max-width: 800px;
+    width: 100%;
     margin: 0 auto;
     padding: var(--space-xxl) var(--space-lg);
+    max-width: 95%;          /* default for small screens */
 }
+
+@media (min-width: 768px) {
+    .content-page {
+        max-width: 900px;    /* tablets */
+    }
+}
+
+@media (min-width: 1200px) {
+    .content-page {
+        max-width: 1100px;   /* desktops */
+    }
+}
+
 
 .post-header {
     margin-bottom: var(--space-xl);
@@ -1537,3 +1551,41 @@ a:hover {
         break-inside: avoid;
     }
 }
+
+
+
+/* Limit image size */
+.post-content img {
+    max-width: 100%;  /* Don't exceed container width */
+    max-height: 400px; /* Adjust max height as needed */
+    object-fit: contain;
+    cursor: zoom-in;
+    transition: transform 0.3s ease;
+}
+
+/* Optional hover effect */
+.post-content img:hover {
+    opacity: 0.9;
+}
+
+/* Fullscreen overlay for zoom */
+.image-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.8);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+
+.image-overlay img {
+    max-width: 90%;
+    max-height: 90%;
+    box-shadow: 0 0 20px rgba(0,0,0,0.5);
+    cursor: zoom-out;
+}
+

@@ -324,6 +324,29 @@
             }
         });
     </script>
+    <div class="image-overlay" id="imageOverlay">
+    <img id="overlayImg" src="" alt="Zoomed Image">
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const overlay = document.getElementById('imageOverlay');
+    const overlayImg = document.getElementById('overlayImg');
+
+    document.querySelectorAll('.post-content img').forEach(img => {
+        img.addEventListener('click', () => {
+            overlayImg.src = img.src;
+            overlay.style.display = 'flex';
+        });
+    });
+
+    overlay.addEventListener('click', () => {
+        overlay.style.display = 'none';
+        overlayImg.src = '';
+    });
+});
+</script>
+
 
 </body>
 </html>

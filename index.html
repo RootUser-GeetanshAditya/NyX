@@ -97,14 +97,13 @@
             <div class="content-grid">
                 
             <article class="content-card">
-                <h3><a href="Blog/advanced-malware-analysis/advanced-malware-analysis.html">Advanced Malware Analysis Techniques</a></h3>
-                <p class="excerpt">Advanced Malware Analysis Techniques
-**Key Takeaway:** This article covers advanced malware analysis techniques that are essential for cybersecurity p...</p>
+                <h3><a href="Blog/DarkGate-Malware-Analysis/DarkGate-Malware-Analysis.html">Unmasking DarkGate: 8 Deobfuscation Layers of 1040doc_pdf.lnk (Malware Analysis 2025)</a></h3>
+                <p class="excerpt">Malware analysis is a critical skill and involves examining the malicious software to understand its behavior, capabilities and potential impact. Usin...</p>
                 <div class="meta">
-                    <span class="date">2024-08-10</span>
-                    <div class="tags"><span class="tag">[malware-analysis, reverse-engineering, ida-pro, ghidra]</span></div>
+                    <span class="date">2025-08-10</span>
+                    <div class="tags"><span class="tag">[DarkGate malware 2025, DarkGate LNK loader, DarkGate reverse engineering, DarkGate deobfuscation analysis]</span></div>
                 </div>
-                <a href="Blog/advanced-malware-analysis/advanced-malware-analysis.html" class="read-more-btn">Read More</a>
+                <a href="Blog/DarkGate-Malware-Analysis/DarkGate-Malware-Analysis.html" class="read-more-btn">Read More</a>
             </article>
             
             </div>
@@ -269,6 +268,29 @@
             }
         });
     </script>
+    <div class="image-overlay" id="imageOverlay">
+    <img id="overlayImg" src="" alt="Zoomed Image">
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const overlay = document.getElementById('imageOverlay');
+    const overlayImg = document.getElementById('overlayImg');
+
+    document.querySelectorAll('.post-content img').forEach(img => {
+        img.addEventListener('click', () => {
+            overlayImg.src = img.src;
+            overlay.style.display = 'flex';
+        });
+    });
+
+    overlay.addEventListener('click', () => {
+        overlay.style.display = 'none';
+        overlayImg.src = '';
+    });
+});
+</script>
+
 
 </body>
 </html>
