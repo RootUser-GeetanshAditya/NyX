@@ -1557,7 +1557,7 @@ a:hover {
 /* Limit image size */
 .post-content img {
     max-width: 100%;  /* Don't exceed container width */
-    max-height: 400px; /* Adjust max height as needed */
+    max-height: 700px; /* Adjust max height as needed */
     object-fit: contain;
     cursor: zoom-in;
     transition: transform 0.3s ease;
