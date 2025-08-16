@@ -490,7 +490,7 @@ Sitemap: {base_url}/sitemap.xml
                 
                 # Replace template variables in base template
                 variables = {
-                    'page_title': f"Geetansh Cybersecurity - {output_file.split('.')[0].title()}",
+                    'page_title': "Geetansh Aditya | Cybersecurity Specialist - Reverse Engineering & DFIR",
                     'main_content': template_content
                 }
                 
