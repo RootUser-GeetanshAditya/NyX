@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HackTheBox - Crypto Challenge "Ancient Cipher" - NYX Cybersecurity</title>
+    <title>HackTheBox - Crypto Challenge "Ancient Cipher" - Geetansh Cybersecurity</title>
     <meta name="description" content="Geetansh Aditya - Professional Cybersecurity Specialist | Reverse Engineering, DFIR, Penetration Testing, Exploit Development">
     <meta name="keywords" content="cybersecurity, reverse engineering, DFIR, penetration testing, exploit development, malware analysis">
     
@@ -314,6 +314,29 @@ H: 4 (8.5%)
             }
         });
     </script>
+    <div class="image-overlay" id="imageOverlay">
+    <img id="overlayImg" src="" alt="Zoomed Image">
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const overlay = document.getElementById('imageOverlay');
+    const overlayImg = document.getElementById('overlayImg');
+
+    document.querySelectorAll('.post-content img').forEach(img => {
+        img.addEventListener('click', () => {
+            overlayImg.src = img.src;
+            overlay.style.display = 'flex';
+        });
+    });
+
+    overlay.addEventListener('click', () => {
+        overlay.style.display = 'none';
+        overlayImg.src = '';
+    });
+});
+</script>
+
 
 </body>
 </html>
