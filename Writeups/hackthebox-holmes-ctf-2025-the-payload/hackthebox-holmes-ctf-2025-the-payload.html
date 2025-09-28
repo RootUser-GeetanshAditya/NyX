@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Holmes CTF 2025: The Payload – Step-by-Step Malware Analysis - Geetansh Cybersecurity</title>
+    <meta name="description" content="Geetansh Aditya - Professional Cybersecurity Specialist | Reverse Engineering, DFIR, Penetration Testing, Exploit Development">
+    <meta name="keywords" content="cybersecurity, reverse engineering, DFIR, penetration testing, exploit development, malware analysis">
+    <link rel="icon" type="image/x-icon" href="../../assets/favicon.svg">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Main stylesheet -->
+    <link rel="stylesheet" href="../../assets/style.css">
+</head>
+<body>
+    <header class="main-header">
+        <nav class="navbar">
+            <div class="nav-container">
+                <a href="../../index.html" class="nav-brand">
+                    <span class="brand-name">Geetansh Aditya</span>
+                </a>
+                
+                <ul class="nav-menu">
+                    <li class="nav-item">
+                        <a href="../../index.html" class="nav-link">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="../../blogs.html" class="nav-link">Blogs</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="../../writeups.html" class="nav-link">CTF Writeups</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="../../services.html" class="nav-link">Services</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="../../about.html" class="nav-link">About Me</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="../../contact.html" class="nav-link">Contact</a>
+                    </li>
+                </ul>
+                
+                <div class="nav-toggle" id="mobile-menu">
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <div class="mobile-overlay" id="mobile-overlay"></div>
+
+    
+            <main class="content-page">
+                <article class="writeup-post">
+                    <header class="post-header">
+                        <h1>Holmes CTF 2025: The Payload – Step-by-Step Malware Analysis</h1>
+                        <div class="post-meta">
+                            <span class="date">2025-09-27</span>
+                            <span class="category">CTF Malware Analysis</span>
+                            <div class="tags">
+                                <span class="tag">[The Payload, holmes-ctf, reverse-engineering]</span>
+                            </div>
+                        </div>
+                    </header>
+                    <div class="post-content">
+                        <div class="info-box">The Payload in a Hard challenge from the Holmes CTF 2025 hosted by HackTheBox. This is of the Malware Reversing category.</div>
+
+<h3 id="challenge-description">Challenge Description</h3>
+<p>This malware reversing challenge from HackTheBox presents us with an active malware (managed active). This is a Windows based <code>.exe</code> file and a <code>.pdb</code> file.</p>
+<p><strong>Challenge Details:</strong></p>
+<ul>
+<li>Difficulty: Hard</li>
+<li>Category: Malware Reversing</li>
+<li>Points: 2100</li>
+</ul>
+<h3 id="initial-analysis">Initial Analysis</h3>
+<p>Upon downloading we have the following files : - </p>
+<ol>
+<li>AetherDesk-v74-77.exe</li>
+<li>AetherDesk-v74-77.pdb</li>
+<li>DANGER.txt (This contains the warning about it only)</li>
+</ol>
+<div class="warning-box">Don’t run it outside the VM and make sure to take snapshots</div>
+
+<p>The CTF had the following Questions which has to be answered and these answers were considered as the flags. The answer for the following 10 questions are the flags.</p>
+<ul>
+<li>During execution, the malware initializes the COM library on its main thread. Based on the imported functions, which DLL is responsible for providing this functionality? (filename.ext)</li>
+<li>Which GUID is used by the binary to instantiate the object containing the data and code for execution? (<strong><em>*</em></strong><em>-</em><strong><em>-</em></strong><em>-</em><strong><em>*</em></strong>****)</li>
+<li>Which .NET framework feature is the attacker using to bridge calls between a managed .NET class and an unmanaged native binary? (string)</li>
+<li>Which Opcode in the disassembly is responsible for calling the first function from the managed code? (<strong> ** </strong><strong>)</strong></li>
+<li>Identify the multiplication and addition constants used by the binary's key generation algorithm for decryption. (<strong>,</strong>h)*</li>
+<li><em>Which Opcode in the disassembly is responsible for calling the decryption logic from the managed code? ( ** ** ** )</em></li>
+<li><em>Which Win32 API is being utilized by the binary to resolve the killswitch domain name? (string)</em></li>
+<li><em>Which network-related API does the binary use to gather details about each shared resource on a server? (string)</em></li>
+<li><em>Which Opcode is responsible for running the encrypted payload? ( ** ** </em><em>)</em></li>
+<li><em>Find → Block → Flag: Identify the killswitch domain, spawn the Docker to block it, and claim the flag. (HTB{</em>_<em><strong>*_</strong>_</em>})</li>
+</ul>
+<h3 id="step-by-step-solution">Step By Step Solution</h3>
+<p>So now lets go through each question, some have direct answers while some have a tricky constitution. </p>
+<p><strong>Question 1: During execution, the malware initializes the COM library on its main thread. Based on the imported functions, which DLL is responsible for providing this functionality? (filename.ext)</strong></p>
+<p>This question I answered directly as <code>ole32.dll</code> is the primary COM Library. In order to verify this, we can use tool CFF explorer.</p>
+<p>Open CFF Explorer, go to the Imports and there you will find the two libraries of COM. However, for initializing the COM library on the main thread <code>ole32.dll</code> is utilized.</p>
+<p><img alt="image.png" src="The%20Payload%20-%20Holmes%20CTF%20WriteUP%2027bd0bcb44a88019bba2caa2e64bc584/image.png" /></p>
+<div class="success-box">Answer: ole32.dll</div>
+
+<p><strong>Question 2 : Which GUID is used by the binary to instantiate the object containing the data and code for execution?(</strong><strong><em>*</em>*-</strong><strong>-</strong><strong>-</strong><strong><em>*</em></strong><strong>*)</strong></p>
+<p>For finding this out, I utilized a Ghidra. But you can use anything like BinaryNinja or IDA Pro. In the decompiled view of the main function, you will find the GUID which was used to instantiate. </p>
+<p><img alt="image.png" src="The%20Payload%20-%20Holmes%20CTF%20WriteUP%2027bd0bcb44a88019bba2caa2e64bc584/image%201.png" /></p>
+<div class="success-box">Answer: dabcd999-1234-4567-89ab-1234567890ff</div>
+
+<p><strong>Question 3: Which .NET framework feature is the attacker using to bridge calls between a managed .NET class and an unmanaged native binary? (string)</strong></p>
+<p>Upon reading the code, we came across <code>CoCreateInstance</code>, <code>OleRun</code>, and <code>QueryInterface</code>. I tried to look for it a and found that all of these are from the COM library.</p>
+<p>So I searched on google for “COM library api for call between .NET class and unmanaged code” and found the resource <a href="https://learn.microsoft.com/en-us/dotnet/csharp/advanced-topics/interop/">Link</a> from Microsoft.<br />
+Upon reading you can easily find out the answer.</p>
+<div class="success-box">Answer: Interop</div>
+
+<p><strong>Question 4: Which Opcode in the disassembly is responsible for calling the first function from the managed code? (</strong> ** <strong>)</strong></p>
+<p>Now, I want you to focus on this part. Upon reading the code slightly, you will find out that the first time the managed code i.e. the call happened to the .NET happened at the line 87. And the corresponding opcode for that call is <code>ff 50 68</code> .</p>
+<p><img alt="image.png" src="The%20Payload%20-%20Holmes%20CTF%20WriteUP%2027bd0bcb44a88019bba2caa2e64bc584/image%202.png" /></p>
+<div class="success-box">Answer: ff 50 68</div>
+
+<p><strong>Question 5: Identify the multiplication and addition constants used by the binary's key generation algorithm for decryption. (*, </strong>h)**</p>
+<p>Once again, upon reading the main function you will find the logic for the decryption. And you will find the corresponding constants. In the format of the answer (<em>, </em>*h), h means hexadecimal. so we need the hex values.</p>
+<p><img alt="image.png" src="The%20Payload%20-%20Holmes%20CTF%20WriteUP%2027bd0bcb44a88019bba2caa2e64bc584/image%203.png" /></p>
+<p>In the image we can see the line:</p>
+<div class="highlight"><pre><span></span><code><span class="n">local_1f8</span><span class="p">.</span><span class="n">_Buf</span><span class="p">[(</span><span class="n">longlong</span><span class="p">)</span><span class="n">pIVar12</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="kt">char</span><span class="p">)</span><span class="n">pIVar12</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="sc">&#39;\a&#39;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="sc">&#39;B&#39;</span><span class="p">;</span>
+</code></pre></div>
+
+<p>Here, <code>\a</code> and <code>B</code> are the constants that are used for the multiplication and addition respectively. Converting them to their ASCII values we find : - </p>
+<div class="highlight"><pre><span></span><code><span class="n">python</span> <span class="o">-</span><span class="n">c</span> <span class="s2">&quot;print(hex(ord(&#39;</span><span class="se">\a</span><span class="s2">&#39;)));print(hex(ord(&#39;B&#39;)))&quot;</span>
+</code></pre></div>
+
+<p><img alt="image.png" src="The%20Payload%20-%20Holmes%20CTF%20WriteUP%2027bd0bcb44a88019bba2caa2e64bc584/image%204.png" /></p>
+<div class="success-box">Answer: 7,42</div>
+
+<p><strong>Question 6: Which Opcode in the disassembly is responsible for calling the decryption logic from the managed code? ( ** ** ** )</strong></p>
+<p>Once again, you will find the decryption logic in the main function. This is very straightforward answer.</p>
+<p><img alt="image.png" src="The%20Payload%20-%20Holmes%20CTF%20WriteUP%2027bd0bcb44a88019bba2caa2e64bc584/image%205.png" /></p>
+<div class="success-box">Answer: ff 50 58</div>
+
+<p><strong>Question 7: Which Win32 API is being utilized by the binary to resolve the killswitch domain name? (string)</strong></p>
+<p>So I found the following code block : - </p>
+<div class="highlight"><pre><span></span><code><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">pIVar15</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="p">(</span><span class="n">LPUNKNOWN</span><span class="p">)</span><span class="mh">0x0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="n">pIVar15</span><span class="o">-&gt;</span><span class="n">lpVtbl</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">IUnknownVtbl</span><span class="w"> </span><span class="o">*</span><span class="p">)</span><span class="mh">0x0</span><span class="p">;</span>
+<span class="w">  </span><span class="n">pIVar15</span><span class="p">[</span><span class="mi">1</span><span class="p">].</span><span class="n">lpVtbl</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">IUnknownVtbl</span><span class="w"> </span><span class="o">*</span><span class="p">)</span><span class="mh">0x0</span><span class="p">;</span>
+<span class="w">  </span><span class="n">pIVar15</span><span class="p">[</span><span class="mi">2</span><span class="p">].</span><span class="n">lpVtbl</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">IUnknownVtbl</span><span class="w"> </span><span class="o">*</span><span class="p">)</span><span class="mh">0x0</span><span class="p">;</span>
+<span class="w">  </span><span class="n">pIVar15</span><span class="p">[</span><span class="mi">1</span><span class="p">].</span><span class="n">lpVtbl</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">IUnknownVtbl</span><span class="w"> </span><span class="o">*</span><span class="p">)</span><span class="mh">0x0</span><span class="p">;</span>
+<span class="w">  </span><span class="o">*</span><span class="p">(</span><span class="n">undefined4</span><span class="w"> </span><span class="o">*</span><span class="p">)</span><span class="o">&amp;</span><span class="n">pIVar15</span><span class="p">[</span><span class="mi">2</span><span class="p">].</span><span class="n">lpVtbl</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="w">  </span><span class="n">local_1f8</span><span class="p">.</span><span class="n">_Ptr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="p">)</span><span class="n">pIVar15</span><span class="p">;</span>
+<span class="w">  </span><span class="n">pIVar14</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">IUnknownVtbl</span><span class="w"> </span><span class="o">*</span><span class="p">)</span><span class="n">_com_util</span><span class="o">::</span><span class="n">ConvertStringToBSTR</span><span class="p">(</span><span class="s">&quot;KXgmYHMADxsV8uHiuPPB3w==&quot;</span><span class="p">);</span>
+<span class="w">  </span><span class="n">pIVar15</span><span class="o">-&gt;</span><span class="n">lpVtbl</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">pIVar14</span><span class="p">;</span>
+<span class="w">  </span><span class="n">pIVar13</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">pIVar15</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>When I found this string <code>KXgmYHMADxsV8uHiuPPB3w==</code>. So I tried to check where its called and found a function named <code>getaddrinfo</code> which is used for the DNS resolution. The decoded string is supplied to this getaddrinfo which is an API from the <strong>Win32.</strong></p>
+<div class="success-box">Answer: getaddrinfo</div>
+
+<p><strong>Question 8: Which network-related API does the binary use to gather details about each shared resource on a server? (string)</strong></p>
+<p>At the end, the main function was calling another function called <code>ScanAndSpread()</code> . I tried to see the decompiled view of the function ScanAndSpread and there I found <code>NetShareEnum</code> which is a Windows API that retrieves information about each shared resource on the server.</p>
+<p><img alt="image.png" src="The%20Payload%20-%20Holmes%20CTF%20WriteUP%2027bd0bcb44a88019bba2caa2e64bc584/image%206.png" /></p>
+<div class="success-box">Answer: NetShareEnum</div>
+
+<p><strong>Question 9: <em>Which Opcode is responsible for running the encrypted payload? ( ** ** **)</em></strong></p>
+<p>In the same <code>ScanAndSpread</code> function, we find an encrypted blob. And then I started looking where its been called. And just few lines below this, the call was made and we can find the opcode in the Listing view.</p>
+<p><img alt="image.png" src="The%20Payload%20-%20Holmes%20CTF%20WriteUP%2027bd0bcb44a88019bba2caa2e64bc584/image%207.png" /></p>
+<div class="success-box">Answer: ff 50 60*</div>
+
+<p><strong>Question 10: Find → Block → Flag: Identify the killswitch domain, spawn the Docker to block it, and claim the flag.(HTB{</strong><strong><em>*</em>_</strong><strong><em>*</em></strong>_<strong><em>*</em></strong><em>_</em><strong>**})</strong></p>
+<p>As we have already identified the kill switch in the <strong>Question 7</strong> we have the encrypted string as <code>KXgmYHMADxsV8uHiuPPB3w==</code> .</p>
+<p>Now we have to decrypt it. We have all the information required at our disposal. We need the xor key for decrypting the killswitch domain. And the logic for generating the key was given as the answer for <strong>Question 5</strong>.</p>
+<div class="highlight"><pre><span></span><code><span class="n">key_array</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">32</span><span class="p">):</span>
+    <span class="n">key_array</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">format</span><span class="p">((</span><span class="n">i</span> <span class="o">*</span> <span class="mi">7</span> <span class="o">+</span> <span class="nb">ord</span><span class="p">(</span><span class="s1">&#39;B&#39;</span><span class="p">))</span> <span class="o">&amp;</span> <span class="mh">0xff</span><span class="p">,</span> <span class="s1">&#39;02x&#39;</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">key_array</span><span class="p">))</span>
+</code></pre></div>
+
+<p>From the above code, we get the key as following : - </p>
+<p><code>424950575e656c737a81888f969da4abb2b9c0c7ced5dce3eaf1f8ff060d141b</code></p>
+<p>Now we will use the CyberChef for decryption.</p>
+<p>Input = <code>KXgmYHMADxsV8uHiuPPB3w==</code></p>
+<p>Recipe : - From Base64 → XOR with our output hex key</p>
+<p><img alt="image.png" src="The%20Payload%20-%20Holmes%20CTF%20WriteUP%2027bd0bcb44a88019bba2caa2e64bc584/image%208.png" /></p>
+<p>We get <em><code>k1v7-echosim.net</code></em> but this is not the answer. Now spawn the docker container and you will reach a DNS Management Dashboard. But the domain here and submit and you will receive the final flag.</p>
+<p><img alt="image.png" src="The%20Payload%20-%20Holmes%20CTF%20WriteUP%2027bd0bcb44a88019bba2caa2e64bc584/image%209.png" /></p>
+<div class="success-box">Answer: HTB{Eternal_Companions_Reunited_Again}</div>
+
+<h3 id="key-learning">Key Learning</h3>
+<p>The kill-switch was a really nice touch in this challenge as it was from the WannaCry concept. And the final flag uses the word “Eternal” which is from the “EternalBlue” exploit. I really liked this touch. However, the overall difficulty of this challenge should be easy to medium. It was easy once you have a bit of understanding about code reading.</p>
+<div class="note-box">Suggestion: This challenge would have been hard if it had multiple layers of obfuscations like the White Snake Stealer or the DarkGate’s 8 stages. I have wrote blog about it you can check it out.</div>
+
+<hr />
+<h2 id="authors-note">Author’s Note</h2>
+<p>I’m Geetansh Aditya — a reverse engineer with hands-on experience in malware analysis, penetration testing, and DFIR. My focus is on dissecting modern threats and exposing the tactics attackers use to evade defenses.  </p>
+<p>If you’d like to connect, collaborate, or discuss research:<br />
+- 🌐 <a href="https://linkedin.com/in/geetansh-aditya">LinkedIn</a><br />
+- 📩 Contact me through my website  </p>
+<p><em>I don’t just stop at reversing binaries — I work across the spectrum of cybersecurity, from red teaming to blue team forensics.</em>  </p>
+<p><strong>Happy Reversing and Happy Hacking!!!</strong></p>
+<div class="info-box">Malware Analysis in itself isn’t tough. You need to have a knack for keep going. The better you are able to understand the nature of the threat actors the more easily you can dissect their malware.</div>
+                    </div>
+                </article>
+                <nav class="post-navigation">
+                    <a href="../../writeups.html" class="back-link">← Back to Writeups</a>
+                </nav>
+            </main>
+            
+
+    <footer class="main-footer">
+        <div class="footer-container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Geetansh Aditya</h3>
+                    <p>Professional Cybersecurity Specialist</p>
+                    <div class="social-links">
+                        <a href="https://github.com/RootUser-GeetanshAditya/" aria-label="GitHub" target="_blank"><i class="fab fa-github"></i></a>
+                        <a href="https://www.linkedin.com/in/geetansh-aditya/" aria-label="LinkedIn" target="_blank"><i class="fab fa-linkedin"></i></a>
+                        <a href="https://x.com/Geetansh_Aditya" aria-label="Twitter" target="_blank"><i class="fab fa-twitter"></i></a>
+                        <a href="mailto:geetanshaditya2005@gmail.com" aria-label="Email" target="_blank"><i class="fas fa-envelope"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Services</h4>
+                    <ul>
+                        <li><a href="../../services.html">Penetration Testing</a></li>
+                        <li><a href="../../services.html">Incident Response</a></li>
+                        <li><a href="../../services.html">Malware Analysis</a></li>
+                        <li><a href="../../services.html">Reverse Engineering</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Resources</h4>
+                    <ul>
+                        <li><a href="../../blogs.html">Blog Posts</a></li>
+                        <li><a href="../../writeups.html">CTF Writeups</a></li>
+                        <li><a href="../../about.html">About</a></li>
+                        <li><a href="../../contact.html">Contact</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2025 Geetansh Aditya. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+        <script>
+        // Mobile navigation toggle
+        document.addEventListener('DOMContentLoaded', function() {
+            const mobileMenu = document.getElementById('mobile-menu');
+            const navMenu = document.querySelector('.nav-menu');
+            const mobileOverlay = document.getElementById('mobile-overlay');
+            const body = document.body;
+
+            function toggleMobileMenu() {
+                mobileMenu.classList.toggle('active');
+                navMenu.classList.toggle('active');
+                mobileOverlay.classList.toggle('active');
+                body.style.overflow = navMenu.classList.contains('active') ? 'hidden' : '';
+            }
+
+            function closeMobileMenu() {
+                mobileMenu.classList.remove('active');
+                navMenu.classList.remove('active');
+                mobileOverlay.classList.remove('active');
+                body.style.overflow = '';
+            }
+
+            if (mobileMenu && navMenu && mobileOverlay) {
+                // Toggle menu when clicking hamburger
+                mobileMenu.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    toggleMobileMenu();
+                });
+
+                // Close menu when clicking overlay
+                mobileOverlay.addEventListener('click', closeMobileMenu);
+
+                // Close mobile menu when clicking on nav links
+                const navLinks = document.querySelectorAll('.nav-link');
+                navLinks.forEach(link => {
+                    link.addEventListener('click', closeMobileMenu);
+                });
+
+                // Close menu on escape key
+                document.addEventListener('keydown', function(e) {
+                    if (e.key === 'Escape' && navMenu.classList.contains('active')) {
+                        closeMobileMenu();
+                    }
+                });
+            }
+        });
+    </script>
+    <div class="image-overlay" id="imageOverlay">
+    <img id="overlayImg" src="" alt="Zoomed Image">
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const overlay = document.getElementById('imageOverlay');
+    const overlayImg = document.getElementById('overlayImg');
+
+    document.querySelectorAll('.post-content img').forEach(img => {
+        img.addEventListener('click', () => {
+            overlayImg.src = img.src;
+            overlay.style.display = 'flex';
+        });
+    });
+
+    overlay.addEventListener('click', () => {
+        overlay.style.display = 'none';
+        overlayImg.src = '';
+    });
+});
+</script>
+
+
+</body>
+</html>
