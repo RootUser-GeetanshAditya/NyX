@@ -9,7 +9,7 @@ date: 2025-09-27
 StartBlueBox
 The Payload in a Hard challenge from the Holmes CTF 2025 hosted by HackTheBox. This is of the Malware Reversing category.
 EndBlueBox
-
+![certificate.png](The%20Payload%20-%20Holmes%20CTF%20WriteUP%2027bd0bcb44a88019bba2caa2e64bc584/certificate.png)
 ### Challenge Description
 
 This malware reversing challenge from HackTheBox presents us with an active malware (managed active). This is a Windows based `.exe` file and a `.pdb` file.
@@ -29,9 +29,7 @@ Upon downloading we have the following files : -
 3. DANGER.txt (This contains the warning about it only)
 
 StartYellowBox
-
 Don’t run it outside the VM and make sure to take snapshots
-
 EndYellowBox
 
 The CTF had the following Questions which has to be answered and these answers were considered as the flags. The answer for the following 10 questions are the flags.
@@ -216,10 +214,9 @@ EndPurpleBox
 ---
 
 ## Author’s Note  
+I am Geetansh Aditya and I participated in this CTF with Andrew Crotty, Devin Plato, Jason C Scribner and Luigi "Vibes" Rulloda. Together we managed 267/7085 teams. 
 
-I’m Geetansh Aditya — a reverse engineer with hands-on experience in malware analysis, penetration testing, and DFIR. My focus is on dissecting modern threats and exposing the tactics attackers use to evade defenses.  
-
-If you’d like to connect, collaborate, or discuss research:  
+If you’d like to connect, collaborate, or discuss research with me:  
 - 🌐 [LinkedIn](https://linkedin.com/in/geetansh-aditya)  
 - 📩 Contact me through my website  
 
@@ -228,7 +225,5 @@ If you’d like to connect, collaborate, or discuss research:
 **Happy Reversing and Happy Hacking!!!**
 
 StartBlueBox
-
 Malware Analysis in itself isn’t tough. You need to have a knack for keep going. The better you are able to understand the nature of the threat actors the more easily you can dissect their malware.
-
 EndBlueBox
