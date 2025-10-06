@@ -162,7 +162,7 @@ In the same `ScanAndSpread` function, we find an encrypted blob. And then I star
 ![image.png](The%20Payload%20-%20Holmes%20CTF%20WriteUP%2027bd0bcb44a88019bba2caa2e64bc584/image%207.png)
 
 StartGreenBox
-Answer: ff 50 60*
+Answer: ff 50 60
 EndGreenBox
 
 **Question 10: Find → Block → Flag: Identify the killswitch domain, spawn the Docker to block it, and claim the flag.(HTB{\*\*\*\*\*\*\*\_\*\*\*\*\*\*\*\*\*\_\*\*\*\*\*\*\*\*\_\*\*\*\*\*})**
