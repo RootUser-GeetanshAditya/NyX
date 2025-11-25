@@ -130,13 +130,11 @@ Upon reading you can easily find out the answer.</p>
 <p>Once again, upon reading the main function you will find the logic for the decryption. And you will find the corresponding constants. In the format of the answer (<em>, </em>*h), h means hexadecimal. so we need the hex values.</p>
 <p><img alt="image.png" src="The%20Payload%20-%20Holmes%20CTF%20WriteUP%2027bd0bcb44a88019bba2caa2e64bc584/image%203.png" /></p>
 <p>In the image we can see the line:</p>
-<div class="highlight"><pre><span></span><code><span class="n">local_1f8</span><span class="p">.</span><span class="n">_Buf</span><span class="p">[(</span><span class="n">longlong</span><span class="p">)</span><span class="n">pIVar12</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="kt">char</span><span class="p">)</span><span class="n">pIVar12</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="sc">&#39;\a&#39;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="sc">&#39;B&#39;</span><span class="p">;</span>
-</code></pre></div>
-
+<pre><code class="language-c">local_1f8._Buf[(longlong)pIVar12] = (char)pIVar12 * '\a' + 'B';
+</code></pre>
 <p>Here, <code>\a</code> and <code>B</code> are the constants that are used for the multiplication and addition respectively. Converting them to their ASCII values we find : - </p>
-<div class="highlight"><pre><span></span><code><span class="n">python</span> <span class="o">-</span><span class="n">c</span> <span class="s2">&quot;print(hex(ord(&#39;</span><span class="se">\a</span><span class="s2">&#39;)));print(hex(ord(&#39;B&#39;)))&quot;</span>
-</code></pre></div>
-
+<pre><code class="language-python">python -c &quot;print(hex(ord('\a')));print(hex(ord('B')))&quot;
+</code></pre>
 <p><img alt="image.png" src="The%20Payload%20-%20Holmes%20CTF%20WriteUP%2027bd0bcb44a88019bba2caa2e64bc584/image%204.png" /></p>
 <div class="success-box">Answer: 7,42</div>
 
@@ -147,19 +145,18 @@ Upon reading you can easily find out the answer.</p>
 
 <p><strong>Question 7: Which Win32 API is being utilized by the binary to resolve the killswitch domain name? (string)</strong></p>
 <p>So I found the following code block : - </p>
-<div class="highlight"><pre><span></span><code><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">pIVar15</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="p">(</span><span class="n">LPUNKNOWN</span><span class="p">)</span><span class="mh">0x0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="n">pIVar15</span><span class="o">-&gt;</span><span class="n">lpVtbl</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">IUnknownVtbl</span><span class="w"> </span><span class="o">*</span><span class="p">)</span><span class="mh">0x0</span><span class="p">;</span>
-<span class="w">  </span><span class="n">pIVar15</span><span class="p">[</span><span class="mi">1</span><span class="p">].</span><span class="n">lpVtbl</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">IUnknownVtbl</span><span class="w"> </span><span class="o">*</span><span class="p">)</span><span class="mh">0x0</span><span class="p">;</span>
-<span class="w">  </span><span class="n">pIVar15</span><span class="p">[</span><span class="mi">2</span><span class="p">].</span><span class="n">lpVtbl</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">IUnknownVtbl</span><span class="w"> </span><span class="o">*</span><span class="p">)</span><span class="mh">0x0</span><span class="p">;</span>
-<span class="w">  </span><span class="n">pIVar15</span><span class="p">[</span><span class="mi">1</span><span class="p">].</span><span class="n">lpVtbl</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">IUnknownVtbl</span><span class="w"> </span><span class="o">*</span><span class="p">)</span><span class="mh">0x0</span><span class="p">;</span>
-<span class="w">  </span><span class="o">*</span><span class="p">(</span><span class="n">undefined4</span><span class="w"> </span><span class="o">*</span><span class="p">)</span><span class="o">&amp;</span><span class="n">pIVar15</span><span class="p">[</span><span class="mi">2</span><span class="p">].</span><span class="n">lpVtbl</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
-<span class="w">  </span><span class="n">local_1f8</span><span class="p">.</span><span class="n">_Ptr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="p">)</span><span class="n">pIVar15</span><span class="p">;</span>
-<span class="w">  </span><span class="n">pIVar14</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">IUnknownVtbl</span><span class="w"> </span><span class="o">*</span><span class="p">)</span><span class="n">_com_util</span><span class="o">::</span><span class="n">ConvertStringToBSTR</span><span class="p">(</span><span class="s">&quot;KXgmYHMADxsV8uHiuPPB3w==&quot;</span><span class="p">);</span>
-<span class="w">  </span><span class="n">pIVar15</span><span class="o">-&gt;</span><span class="n">lpVtbl</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">pIVar14</span><span class="p">;</span>
-<span class="w">  </span><span class="n">pIVar13</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">pIVar15</span><span class="p">;</span>
-<span class="p">}</span>
-</code></pre></div>
-
+<pre><code class="language-c">if (pIVar15 != (LPUNKNOWN)0x0) {
+  pIVar15-&gt;lpVtbl = (IUnknownVtbl *)0x0;
+  pIVar15[1].lpVtbl = (IUnknownVtbl *)0x0;
+  pIVar15[2].lpVtbl = (IUnknownVtbl *)0x0;
+  pIVar15[1].lpVtbl = (IUnknownVtbl *)0x0;
+  *(undefined4 *)&amp;pIVar15[2].lpVtbl = 1;
+  local_1f8._Ptr = (char *)pIVar15;
+  pIVar14 = (IUnknownVtbl *)_com_util::ConvertStringToBSTR(&quot;KXgmYHMADxsV8uHiuPPB3w==&quot;);
+  pIVar15-&gt;lpVtbl = pIVar14;
+  pIVar13 = pIVar15;
+}
+</code></pre>
 <p>When I found this string <code>KXgmYHMADxsV8uHiuPPB3w==</code>. So I tried to check where its called and found a function named <code>getaddrinfo</code> which is used for the DNS resolution. The decoded string is supplied to this getaddrinfo which is an API from the <strong>Win32.</strong></p>
 <div class="success-box">Answer: getaddrinfo</div>
 
@@ -171,17 +168,16 @@ Upon reading you can easily find out the answer.</p>
 <p><strong>Question 9: Which Opcode is responsible for running the encrypted payload? (** ** **)</strong></p>
 <p>In the same <code>ScanAndSpread</code> function, we find an encrypted blob. And then I started looking where its been called. And just few lines below this, the call was made and we can find the opcode in the Listing view.</p>
 <p><img alt="image.png" src="The%20Payload%20-%20Holmes%20CTF%20WriteUP%2027bd0bcb44a88019bba2caa2e64bc584/image%207.png" /></p>
-<div class="success-box">Answer: ff 50 60*</div>
+<div class="success-box">Answer: ff 50 60</div>
 
 <p><strong>Question 10: Find → Block → Flag: Identify the killswitch domain, spawn the Docker to block it, and claim the flag.(HTB{*******_*********_********_*****})</strong></p>
 <p>As we have already identified the kill switch in the <strong>Question 7</strong> we have the encrypted string as <code>KXgmYHMADxsV8uHiuPPB3w==</code> .<br />
 Now we have to decrypt it. We have all the information required at our disposal. We need the xor key for decrypting the killswitch domain. And the logic for generating the key was given as the answer for <strong>Question 5</strong>.</p>
-<div class="highlight"><pre><span></span><code><span class="n">key_array</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">32</span><span class="p">):</span>
-    <span class="n">key_array</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">format</span><span class="p">((</span><span class="n">i</span> <span class="o">*</span> <span class="mi">7</span> <span class="o">+</span> <span class="nb">ord</span><span class="p">(</span><span class="s1">&#39;B&#39;</span><span class="p">))</span> <span class="o">&amp;</span> <span class="mh">0xff</span><span class="p">,</span> <span class="s1">&#39;02x&#39;</span><span class="p">))</span>
-<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">key_array</span><span class="p">))</span>
-</code></pre></div>
-
+<pre><code class="language-python">key_array = []
+for i in range(32):
+    key_array.append(format((i * 7 + ord('B')) &amp; 0xff, '02x'))
+print(''.join(key_array))
+</code></pre>
 <p>From the above code, we get the key as following : - </p>
 <p><code>424950575e656c737a81888f969da4abb2b9c0c7ced5dce3eaf1f8ff060d141b</code><br />
 Now we will use the CyberChef for decryption.<br />
